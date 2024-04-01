@@ -28,17 +28,19 @@ var audioContext = null;
 var isPlaying = false;
 var sourceNode = null;
 var analyser = null;
-var fftSize = 4096;
+var fftSize = null;
 var theBuffer = null;
 var DEBUGCANVAS = null;
 var mediaStreamSource = null;
 var tempElem;
 var volElem, freqElem;
 var pitchElems;
+var rafID = null;
+var tracks = null;
+var buf = null;
 
 window.onload = function() {
   audioContext = new AudioContext();
-  MAX_SIZE = Math.max(4,Math.floor(audioContext.sampleRate/5000));  // corresponds to a 5kHz signal
   tempElem = document.getElementById( "temperament" );
   pitchElems = document.getElementsByClassName( "pitch" );
   volElem = document.getElementById( "vol" );
@@ -46,6 +48,9 @@ window.onload = function() {
 }
 
 function startPitchDetect() {  
+    fftSize = document.getElementById( "fft" ).value;
+    buf = new Float32Array( fftSize );
+  
     // grab an audio context
     audioContext = new AudioContext();
 
@@ -77,12 +82,12 @@ function startPitchDetect() {
     });
 }
 
-var rafID = null;
-var tracks = null;
-var buf = new Float32Array( fftSize );
 var temps = {
   "equal": [261.6, 277.2, 293.7, 311.1, 329.6, 349.2, 370.0, 392.0, 415.3, 440.0, 466.2, 493.9],
-  "valotti": [262.4, 277.3, 293.9, 311.9, 329.3, 350.5, 369.7, 392.7, 415.9, 440.0, 467.9, 493.0]
+  "valotti": [262.4, 277.3, 293.9, 311.9, 329.3, 350.5, 369.7, 392.7, 415.9, 440.0, 467.9, 493.0],
+  "kirnberger_1": [264.0, 278.1, 297.0, 312.9, 330.0, 352.0, 371.3, 396.0, 417.2, 440.0, 469.3, 495.0],
+  "kirnberger_2": [262.4, 276.4, 295.2, 311.0, 328.0, 349.8, 369.0, 393.5, 414.6, 440.0, 466.4, 491.9],
+  "kirnberger_3": [263.2, 277.3, 294.2, 311.9, 329.0, 350.9, 370.1, 393.5, 415.9, 440.0, 467.9, 493.5]
 }
 
 function centsOffFromPitch( pitch, note ) {

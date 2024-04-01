@@ -5,8 +5,16 @@
   </head>
   <body style="font-family: monospace">
     <script src="js/pitchdetect.js"></script>
+    <select id="fft">
+      <option value=1024>1024</option>
+      <option value=2048>2048</option>
+      <option value=4096>4096</option>
+    </select>
     <select id="temperament">
       <option value="valotti">Vallotti syntonic</option>
+      <option value="kirnberger_1">Kirnberger I</option>
+      <option value="kirnberger_2">Kirnberger II</option>
+      <option value="kirnberger_3">Kirnberger III</option>
       <option value="equal">Equal</option>
     </select>
     <p><button onclick="startPitchDetect();">Start</button></p>
